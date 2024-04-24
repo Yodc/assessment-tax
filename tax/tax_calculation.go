@@ -1,6 +1,6 @@
 package tax
 
-func TaxCalculation(netIncome float64) float64 {
+func TaxCalculation(netIncome float64) (float64, []TaxLevel) {
 	taxBrackets := []struct {
 		lower, upper, rate float64
 	}{
@@ -13,11 +13,36 @@ func TaxCalculation(netIncome float64) float64 {
 
 	var arrResult []float64
 
-	for _, bracket := range taxBrackets {
+	taxLevel := []TaxLevel{
+		{
+			Level: "0-150,000",
+			Tax:   "0.00",
+		},
+		{
+			Level: "150,001-500,000",
+			Tax:   "0.00",
+		},
+		{
+			Level: "500,001-1,000,000",
+			Tax:   "0.00",
+		},
+		{
+			Level: "1,000,001-2,000,000",
+			Tax:   "0.00",
+		},
+		{
+			Level: "2,000,001 ขึ้นไป",
+			Tax:   "0.00",
+		},
+	}
+
+	for idx, bracket := range taxBrackets {
 		if netIncome > bracket.upper {
 			arrResult = append(arrResult, (bracket.upper-bracket.lower)*bracket.rate)
+			taxLevel[idx].Tax = toNumber(arrResult[idx])
 		} else {
 			arrResult = append(arrResult, (netIncome-bracket.lower)*bracket.rate)
+			taxLevel[idx].Tax = toNumber(arrResult[idx])
 			break
 		}
 
@@ -28,5 +53,5 @@ func TaxCalculation(netIncome float64) float64 {
 		tax += result
 	}
 
-	return tax
+	return tax, taxLevel
 }

@@ -13,7 +13,7 @@ func TestTaxCalculation(t *testing.T) {
 
 		want := 0.00
 
-		got := tax.TaxCalculation(total_income)
+		got, _ := tax.TaxCalculation(total_income)
 
 		if got != want {
 			t.Errorf("TaxCalculation(%f) = %f; want %f", total_income, got, want)
@@ -23,7 +23,7 @@ func TestTaxCalculation(t *testing.T) {
 	t.Run("Should return tax=0 when total_income=150000", func(t *testing.T) {
 		total_income := 150000.00
 
-		got := tax.TaxCalculation(total_income)
+		got, _ := tax.TaxCalculation(total_income)
 
 		want := 0.00
 
@@ -35,7 +35,7 @@ func TestTaxCalculation(t *testing.T) {
 	t.Run("Should return tax=0.1 when total_income=150001", func(t *testing.T) {
 		total_income := 150001.00
 
-		got := tax.TaxCalculation(total_income)
+		got, _ := tax.TaxCalculation(total_income)
 
 		want := 0.10
 
@@ -47,7 +47,7 @@ func TestTaxCalculation(t *testing.T) {
 	t.Run("Should return tax=50000 when total_income=500000", func(t *testing.T) {
 		total_income := 500000.00
 
-		got := tax.TaxCalculation(total_income)
+		got, _ := tax.TaxCalculation(total_income)
 
 		want := 35000.00
 
@@ -59,7 +59,7 @@ func TestTaxCalculation(t *testing.T) {
 	t.Run("Should return tax=50150 when total_income=500001", func(t *testing.T) {
 		total_income := 500001.00
 
-		got := tax.TaxCalculation(total_income)
+		got, _ := tax.TaxCalculation(total_income)
 
 		want := 35000.00 + 0.15
 
@@ -71,7 +71,7 @@ func TestTaxCalculation(t *testing.T) {
 	t.Run("Should return tax=110000 when total_income=1000000", func(t *testing.T) {
 		total_income := 1000000.00
 
-		got := tax.TaxCalculation(total_income)
+		got, _ := tax.TaxCalculation(total_income)
 
 		want := 35000.00 + 75000.00
 
@@ -83,7 +83,7 @@ func TestTaxCalculation(t *testing.T) {
 	t.Run("Should return tax=125200 when total_income=1000001", func(t *testing.T) {
 		total_income := 1000001.00
 
-		got := tax.TaxCalculation(total_income)
+		got, _ := tax.TaxCalculation(total_income)
 
 		want := 35000.00 + 75000.00 + 0.20
 
@@ -95,7 +95,7 @@ func TestTaxCalculation(t *testing.T) {
 	t.Run("Should return tax=100 when total_income=2000000", func(t *testing.T) {
 		total_income := 2000000.00
 
-		got := tax.TaxCalculation(total_income)
+		got, _ := tax.TaxCalculation(total_income)
 
 		want := 35000.00 + 75000.00 + 200000.00
 
@@ -107,7 +107,7 @@ func TestTaxCalculation(t *testing.T) {
 	t.Run("Should return tax=100 when total_income=2000001", func(t *testing.T) {
 		total_income := 2000001.00
 
-		got := tax.TaxCalculation(total_income)
+		got, _ := tax.TaxCalculation(total_income)
 
 		want := 35000.00 + 75000.00 + 200000.00 + 0.35
 

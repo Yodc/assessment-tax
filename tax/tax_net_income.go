@@ -1,7 +1,5 @@
 package tax
 
-import "fmt"
-
 func CalculationNetIncome(data *Income) {
 
 	deductAmount := 0.00
@@ -19,7 +17,6 @@ func CalculationNetIncome(data *Income) {
 		}
 	}
 
-	fmt.Println(deductAmount)
 	netIncome := data.TotalIncome - deductAmount
 	if netIncome <= 0 {
 		data.NetIncome = 0

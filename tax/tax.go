@@ -21,9 +21,15 @@ type Allowance struct {
 	Amount        float64 `json:"amount"`
 }
 
+type TaxLevel struct {
+	Level string      `json:"level"`
+	Tax   json.Number `json:"tax"`
+}
+
 type Tax struct {
 	Tax       json.Number `json:"tax"`
 	TaxRefund json.Number `json:"taxRefund"`
+	TaxLevel  []TaxLevel
 }
 
 func TaxCalculationService(c echo.Context) error {
@@ -36,12 +42,13 @@ func TaxCalculationService(c echo.Context) error {
 	}
 
 	CalculationNetIncome(&data)
-	taxAmount := TaxCalculation(data.NetIncome)
+	taxAmount, taxLevel := TaxCalculation(data.NetIncome)
 	taxAmountDeducted := DeductWht(&data, taxAmount)
 
 	response := Tax{
 		Tax:       toNumber(taxAmountDeducted),
 		TaxRefund: toNumber(data.TaxRefund),
+		TaxLevel:  taxLevel,
 	}
 	return c.JSON(http.StatusOK, response)
 }
