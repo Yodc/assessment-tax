@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"time"
 
+	tax "github.com/YodC/assessment-tax/tax"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -21,6 +22,8 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, Go Bootcamp!")
 	})
+
+	e.POST("/tax/calculations", tax.TaxCalculationService)
 
 	go func() {
 		if err := e.Start(os.Getenv("PORT")); err != nil && err != http.ErrServerClosed { // Start server
