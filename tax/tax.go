@@ -13,6 +13,7 @@ type Income struct {
 	Wht         float64     `json:"wht"`
 	NetIncome   float64     `json:"netIncome"`
 	Allowances  []Allowance `json:"allowances"`
+	TaxRefund   float64
 }
 
 type Allowance struct {
@@ -21,7 +22,8 @@ type Allowance struct {
 }
 
 type Tax struct {
-	Tax json.Number `json:"tax"`
+	Tax       json.Number `json:"tax"`
+	TaxRefund json.Number `json:"taxRefund"`
 }
 
 func TaxCalculationService(c echo.Context) error {
@@ -35,9 +37,11 @@ func TaxCalculationService(c echo.Context) error {
 
 	CalculationNetIncome(&data)
 	taxAmount := TaxCalculation(data.NetIncome)
+	taxAmountDeducted := DeductWht(&data, taxAmount)
 
 	response := Tax{
-		Tax: toNumber(taxAmount),
+		Tax:       toNumber(taxAmountDeducted),
+		TaxRefund: toNumber(data.TaxRefund),
 	}
 	return c.JSON(http.StatusOK, response)
 }
