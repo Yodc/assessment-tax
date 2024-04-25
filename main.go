@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"time"
 
+	deduct "github.com/YodC/assessment-tax/deduction"
 	tax "github.com/YodC/assessment-tax/tax"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -24,6 +25,7 @@ func main() {
 	})
 
 	e.POST("/tax/calculations", tax.TaxCalculationService)
+	e.POST("/admin/deductions/personal", deduct.InsertOrUpdatePersonalDeductionService)
 
 	go func() {
 		if err := e.Start(os.Getenv("PORT")); err != nil && err != http.ErrServerClosed { // Start server
