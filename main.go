@@ -25,6 +25,7 @@ func main() {
 	})
 
 	e.POST("/tax/calculations", tax.TaxCalculationService)
+	e.POST("/tax/calculations/upload-csv", tax.TaxCalculationFromCSVService)
 	e.POST("/admin/deductions/personal", deduct.InsertOrUpdatePersonalDeductionService)
 
 	go func() {
