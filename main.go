@@ -27,6 +27,8 @@ func main() {
 	e.POST("/tax/calculations", tax.TaxCalculationService)
 	e.POST("/tax/calculations/upload-csv", tax.TaxCalculationFromCSVService)
 	e.POST("/admin/deductions/personal", deduct.InsertOrUpdatePersonalDeductionService)
+	e.POST("/admin/deductions/k-receipt", deduct.InsertOrUpdateKReceiptDeductionService)
+	e.POST("/admin/deductions/donation", deduct.InsertOrUpdateDonationDeductionService)
 
 	go func() {
 		if err := e.Start(os.Getenv("PORT")); err != nil && err != http.ErrServerClosed { // Start server

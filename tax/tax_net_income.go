@@ -1,15 +1,21 @@
 package tax
 
+import deduct "github.com/YodC/assessment-tax/deduction"
+
 func CalculationNetIncome(data *Income) {
 
 	deductAmount := 0.00
 
-	deductAmount += 60000
+	deductPersonalAmount := deduct.GetDeductionByDeductionType("personal_deduction").DeductionAmount
+	deductKReceiptAmount := deduct.GetDeductionByDeductionType("k-receipt").DeductionAmount
+	deductDonationAmount := deduct.GetDeductionByDeductionType("donation").DeductionAmount
+
+	deductAmount += deductPersonalAmount
 
 	for _, item := range data.Allowances {
 		if item.AllowanceType == "donation" {
-			if item.Amount > 100000.00 {
-				deductAmount += 100000.00
+			if item.Amount > deductDonationAmount {
+				deductAmount += deductDonationAmount
 			} else {
 				deductAmount += item.Amount
 
@@ -17,8 +23,8 @@ func CalculationNetIncome(data *Income) {
 		}
 
 		if item.AllowanceType == "k-receipt" {
-			if item.Amount > 50000.00 {
-				deductAmount += 50000.00
+			if item.Amount > deductKReceiptAmount {
+				deductAmount += deductKReceiptAmount
 			} else {
 				deductAmount += item.Amount
 			}
