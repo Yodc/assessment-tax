@@ -15,6 +15,14 @@ func CalculationNetIncome(data *Income) {
 
 			}
 		}
+
+		if item.AllowanceType == "k-receipt" {
+			if item.Amount > 50000.00 {
+				deductAmount += 50000.00
+			} else {
+				deductAmount += item.Amount
+			}
+		}
 	}
 
 	netIncome := data.TotalIncome - deductAmount

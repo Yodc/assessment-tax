@@ -77,26 +77,26 @@ func ConvertDataFromCsv(data [][]string) ([]IncomeCsv, error) {
 		if idx > 0 {
 
 			if len(line) != 3 {
-				return nil, errors.New("data in record not equal 3.")
+				return nil, errors.New(`data in record not equal 3`)
 			}
 
 			if strings.Trim(line[0], "") == "" || strings.Trim(line[1], "") == "" || strings.Trim(line[2], "") == "" {
-				return nil, errors.New("some data in record empty.")
+				return nil, errors.New(`some data in record empty`)
 			}
 
 			totalIncome, err := strconv.ParseFloat(line[0], 64)
 			if err != nil {
-				return nil, errors.New("totalIncome(line:%d) is not number.")
+				return nil, errors.New(`totalIncome(line:%d) is not number`)
 			}
 
 			wht, err := strconv.ParseFloat(line[1], 64)
 			if err != nil {
-				return nil, errors.New("wht(line:%d) is not number.")
+				return nil, errors.New(`wht(line:%d) is not number`)
 			}
 
 			donationAmount, err := strconv.ParseFloat(line[2], 64)
 			if err != nil {
-				return nil, errors.New("donation(line:%d) is not number.")
+				return nil, errors.New(`donation(line:%d) is not number`)
 			}
 
 			item := IncomeCsv{
