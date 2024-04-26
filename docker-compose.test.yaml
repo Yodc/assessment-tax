@@ -1,0 +1,37 @@
+version: '3.8'
+
+networks:
+  integation-test-example:
+
+services:
+  db-test:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: P@ssw0rd
+      POSTGRES_DB: assessment-tax-test
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - '5432:5432'
+    expose:
+      - "5432"
+    networks:
+      - integation-test-example
+  assessment-tax-service-test:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.test
+    image: assessment-tax-service-test
+    pull_policy: always
+    volumes:
+      - ./:/app
+    networks:
+      - integation-test-example
+    environment:
+      PORT: "8080"
+      DATABASE_URL: "host=db-test user=postgres password=P@ssw0rd dbname=assessment-tax-test port=5432 sslmode=disable"
+      ADMIN_USERNAME: "adminTax"
+      ADMIN_PASSWORD: "admin!"
+    depends_on:
+      - db-test

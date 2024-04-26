@@ -58,6 +58,14 @@ func TaxCalculationService(c echo.Context) error {
 		return err
 	}
 
+	if data.Wht < 0 {
+		c.String(http.StatusBadRequest, "Wht must positive number")
+	}
+
+	if data.TotalIncome <= 0 {
+		c.String(http.StatusBadRequest, "TotalIncome must positive number")
+	}
+
 	CalculationNetIncome(&data)
 	taxAmount, taxLevel := TaxCalculation(data.NetIncome)
 	taxAmountDeducted := DeductWht(&data, taxAmount)

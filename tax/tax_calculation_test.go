@@ -1,3 +1,6 @@
+//go:build unit
+// +build unit
+
 package tax_test
 
 import (

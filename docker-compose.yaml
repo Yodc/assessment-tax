@@ -1,9 +1,30 @@
+version: '3.8'
+
+
 services:
-  postgres:
+  db:
     image: postgres:16
+    restart: on-failure
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: ktaxes
+      POSTGRES_PASSWORD: P@ssw0rd
+      POSTGRES_DB: assessment-tax
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - '5432:5432'
+  assessment-tax-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: assessment-tax-service
+    restart: on-failure
+    environment:
+      PORT: "8080"
+      DATABASE_URL: "host=db user=postgres password=P@ssw0rd dbname=assessment-tax port=5432 sslmode=disable"
+      ADMIN_USERNAME: "adminTax"
+      ADMIN_PASSWORD: "admin!"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db

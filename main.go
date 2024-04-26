@@ -12,28 +12,39 @@ import (
 	tax "github.com/YodC/assessment-tax/tax"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 )
 
 func main() {
 
-	godotenv.Load(".env")
+	godotenv.Load(".env.dev")
 	e := echo.New()
 	e.Logger.SetLevel(log.INFO)
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, Go Bootcamp!")
 	})
 
+	// nomal
 	e.POST("/tax/calculations", tax.TaxCalculationService)
 	e.POST("/tax/calculations/upload-csv", tax.TaxCalculationFromCSVService)
-	e.POST("/admin/deductions/personal", deduct.InsertOrUpdatePersonalDeductionService)
-	e.POST("/admin/deductions/k-receipt", deduct.InsertOrUpdateKReceiptDeductionService)
-	e.POST("/admin/deductions/donation", deduct.InsertOrUpdateDonationDeductionService)
+
+	// admin group
+	g := e.Group("admin")
+	g.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
+		// Check if username and password match your desired credentials
+		if username == os.Getenv("ADMIN_USERNAME") && password == os.Getenv("ADMIN_PASSWORD") {
+			return true, nil
+		}
+		return false, nil
+	}))
+	g.POST("/deductions/personal", deduct.InsertOrUpdatePersonalDeductionService)
+	g.POST("/deductions/k-receipt", deduct.InsertOrUpdateKReceiptDeductionService)
+	g.POST("/deductions/donation", deduct.InsertOrUpdateDonationDeductionService)
 
 	go func() {
-		if err := e.Start(os.Getenv("PORT")); err != nil && err != http.ErrServerClosed { // Start server
+		if err := e.Start(":" + os.Getenv("PORT")); err != nil && err != http.ErrServerClosed { // Start server
 			e.Logger.Fatal("shutting down the server")
-
 		}
 	}()
 

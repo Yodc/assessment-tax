@@ -32,14 +32,8 @@ func GetDeductionByDeductionType(deductionType string) Deduction {
 	return deduction
 }
 
-func InsertOrUpdatePersonalDeductionService(c echo.Context) error {
+func InsertOrUpdatePersonalDeduction(param DeductionParam) Deduction {
 	db := database.InitDBPostgres()
-
-	var param DeductionParam
-	err := c.Bind(&param)
-	if err != nil {
-		return err
-	}
 
 	deduction := Deduction{
 		DeductionType:   "personal_deduction",
@@ -51,17 +45,24 @@ func InsertOrUpdatePersonalDeductionService(c echo.Context) error {
 		DoUpdates: clause.AssignmentColumns([]string{"deduction_amount"}),
 	}).Create(&deduction)
 
-	return c.JSON(http.StatusOK, PersonalDeductionResponse{PersonalDeduction: json.Number(toNumber(deduction.DeductionAmount))})
+	return deduction
 }
 
-func InsertOrUpdateKReceiptDeductionService(c echo.Context) error {
-	db := database.InitDBPostgres()
+func InsertOrUpdatePersonalDeductionService(c echo.Context) error {
 
 	var param DeductionParam
 	err := c.Bind(&param)
 	if err != nil {
 		return err
 	}
+
+	deduction := InsertOrUpdatePersonalDeduction(param)
+
+	return c.JSON(http.StatusOK, PersonalDeductionResponse{PersonalDeduction: json.Number(toNumber(deduction.DeductionAmount))})
+}
+
+func InsertOrUpdateKReceiptDeduction(param DeductionParam) Deduction {
+	db := database.InitDBPostgres()
 
 	deduction := Deduction{
 		DeductionType:   "k-receipt",
@@ -73,17 +74,23 @@ func InsertOrUpdateKReceiptDeductionService(c echo.Context) error {
 		DoUpdates: clause.AssignmentColumns([]string{"deduction_amount"}),
 	}).Create(&deduction)
 
-	return c.JSON(http.StatusOK, PersonalDeductionResponse{PersonalDeduction: json.Number(toNumber(deduction.DeductionAmount))})
+	return deduction
 }
 
-func InsertOrUpdateDonationDeductionService(c echo.Context) error {
-	db := database.InitDBPostgres()
+func InsertOrUpdateKReceiptDeductionService(c echo.Context) error {
 
 	var param DeductionParam
 	err := c.Bind(&param)
 	if err != nil {
 		return err
 	}
+
+	deduction := InsertOrUpdateKReceiptDeduction(param)
+	return c.JSON(http.StatusOK, PersonalDeductionResponse{PersonalDeduction: json.Number(toNumber(deduction.DeductionAmount))})
+}
+
+func InsertOrUpdateDonationDeduction(param DeductionParam) Deduction {
+	db := database.InitDBPostgres()
 
 	deduction := Deduction{
 		DeductionType:   "donation",
@@ -94,6 +101,19 @@ func InsertOrUpdateDonationDeductionService(c echo.Context) error {
 		Columns:   []clause.Column{{Name: "deduction_type"}},
 		DoUpdates: clause.AssignmentColumns([]string{"deduction_amount"}),
 	}).Create(&deduction)
+
+	return deduction
+}
+
+func InsertOrUpdateDonationDeductionService(c echo.Context) error {
+
+	var param DeductionParam
+	err := c.Bind(&param)
+	if err != nil {
+		return err
+	}
+
+	deduction := InsertOrUpdateDonationDeduction(param)
 
 	return c.JSON(http.StatusOK, PersonalDeductionResponse{PersonalDeduction: json.Number(toNumber(deduction.DeductionAmount))})
 }
