@@ -62,6 +62,16 @@ func TaxCalculationService(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Wht must positive number")
 	}
 
+	if data.Wht > data.TotalIncome {
+		return c.String(http.StatusBadRequest, "Wht can't more than totalIncome")
+	}
+
+	for _, v := range data.Allowances {
+		if v.Amount < 0 {
+			return c.String(http.StatusBadRequest, fmt.Sprintf("%s must positive number", v.AllowanceType))
+		}
+	}
+
 	if data.TotalIncome <= 0 {
 		return c.String(http.StatusBadRequest, "TotalIncome must positive number")
 	}
