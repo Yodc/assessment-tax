@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -59,21 +58,21 @@ func TaxCalculationService(c echo.Context) error {
 	}
 
 	if data.Wht < 0 {
-		return c.String(http.StatusBadRequest, "Wht must positive number")
+		return c.String(http.StatusUnprocessableEntity, "Wht must positive number")
 	}
 
 	if data.Wht > data.TotalIncome {
-		return c.String(http.StatusBadRequest, "Wht can't more than totalIncome")
+		return c.String(http.StatusUnprocessableEntity, "Wht can't more than totalIncome")
 	}
 
 	for _, v := range data.Allowances {
 		if v.Amount < 0 {
-			return c.String(http.StatusBadRequest, fmt.Sprintf("%s must positive number", v.AllowanceType))
+			return c.String(http.StatusUnprocessableEntity, fmt.Sprintf("%s must positive number", v.AllowanceType))
 		}
 	}
 
 	if data.TotalIncome <= 0 {
-		return c.String(http.StatusBadRequest, "TotalIncome must positive number")
+		return c.String(http.StatusUnprocessableEntity, "TotalIncome must positive number")
 	}
 
 	CalculationNetIncome(&data)
@@ -145,12 +144,12 @@ func TaxCalculationFromCSVService(c echo.Context) error {
 	csvReader := csv.NewReader(src)
 	data, err := csvReader.ReadAll()
 	if err != nil {
-		log.Fatal(err)
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	IncomeCsv, err := ConvertDataFromCsv(data)
 	if err != nil {
-		return c.String(http.StatusBadRequest, err.Error())
+		return c.String(http.StatusUnprocessableEntity, err.Error())
 	}
 
 	var taxs []TaxCsv
