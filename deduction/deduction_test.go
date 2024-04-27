@@ -1,3 +1,6 @@
+//go:build integation
+// +build integation
+
 package deduction_test
 
 import (
@@ -26,14 +29,14 @@ func TestDeduction(t *testing.T) {
 		}
 	})
 
-	t.Run("Store or update k-receipt deduction success when amount=100000", func(t *testing.T) {
+	t.Run("Store or update k-receipt deduction success when amount=60000", func(t *testing.T) {
 
 		param := deduct.DeductionParam{
-			Amount: 100000.00,
+			Amount: 60000.00,
 		}
 
 		want := deduct.Deduction{
-			DeductionAmount: 100000.00,
+			DeductionAmount: 60000.00,
 			DeductionType:   "personal_deduction",
 		}
 
@@ -55,7 +58,7 @@ func TestDeduction(t *testing.T) {
 			DeductionType:   "k-receipt",
 		}
 
-		got := deduct.InsertOrUpdatePersonalDeduction(param)
+		got := deduct.InsertOrUpdateKReceiptDeduction(param)
 
 		if want.DeductionAmount != got.DeductionAmount && got.DeductionType == want.DeductionType && got.DeductionId > 0 {
 			t.Errorf("InsertOrUpdatePersonalDeduction Failed")
@@ -73,7 +76,7 @@ func TestDeduction(t *testing.T) {
 			DeductionType:   "donation",
 		}
 
-		got := deduct.InsertOrUpdatePersonalDeduction(param)
+		got := deduct.InsertOrUpdateDonationDeduction(param)
 
 		if want.DeductionAmount != got.DeductionAmount && got.DeductionType == want.DeductionType && got.DeductionId > 0 {
 			t.Errorf("InsertOrUpdatePersonalDeduction Failed")

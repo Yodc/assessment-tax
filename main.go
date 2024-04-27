@@ -18,7 +18,7 @@ import (
 
 func main() {
 
-	godotenv.Load(".env.dev")
+	godotenv.Load(".env")
 	e := echo.New()
 	e.Logger.SetLevel(log.INFO)
 	e.GET("/", func(c echo.Context) error {

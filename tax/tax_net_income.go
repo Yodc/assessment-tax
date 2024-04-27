@@ -1,6 +1,10 @@
 package tax
 
-import deduct "github.com/YodC/assessment-tax/deduction"
+import (
+	"fmt"
+
+	deduct "github.com/YodC/assessment-tax/deduction"
+)
 
 func CalculationNetIncome(data *Income) {
 
@@ -9,6 +13,10 @@ func CalculationNetIncome(data *Income) {
 	deductPersonalAmount := deduct.GetDeductionByDeductionType("personal_deduction").DeductionAmount
 	deductKReceiptAmount := deduct.GetDeductionByDeductionType("k-receipt").DeductionAmount
 	deductDonationAmount := deduct.GetDeductionByDeductionType("donation").DeductionAmount
+
+	fmt.Println(deductPersonalAmount)
+	fmt.Println(deductKReceiptAmount)
+	fmt.Println(deductDonationAmount)
 
 	deductAmount += deductPersonalAmount
 
@@ -37,5 +45,5 @@ func CalculationNetIncome(data *Income) {
 	} else {
 		data.NetIncome = netIncome
 	}
-
+	fmt.Println(deductAmount)
 }
