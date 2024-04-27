@@ -56,6 +56,10 @@ func InsertOrUpdatePersonalDeductionService(c echo.Context) error {
 		return err
 	}
 
+	if param.Amount < 10000 || param.Amount > 100000 {
+		return c.String(http.StatusBadRequest, "personal deduction is number between 10000 - 100000")
+	}
+
 	deduction := InsertOrUpdatePersonalDeduction(param)
 
 	return c.JSON(http.StatusOK, PersonalDeductionResponse{PersonalDeduction: json.Number(toNumber(deduction.DeductionAmount))})
@@ -83,6 +87,10 @@ func InsertOrUpdateKReceiptDeductionService(c echo.Context) error {
 	err := c.Bind(&param)
 	if err != nil {
 		return err
+	}
+
+	if param.Amount < 0 || param.Amount > 100000 {
+		return c.String(http.StatusBadRequest, "k-receipt is number between 0 - 100000")
 	}
 
 	deduction := InsertOrUpdateKReceiptDeduction(param)
